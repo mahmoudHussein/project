@@ -8,8 +8,9 @@ import com.opencsv.CSVWriter;
 public class StatisticsScrapping {
 
 	public static void csvWriter(String[] x, String fileName, String subjectDate) throws IOException{
-		String cleanFileName = fileName.replaceAll("[\\/\\+.^:,]",""); //remove some special characters to create the file names
-		FileWriter mFileWriter = new FileWriter("M:\\masters\\semester 4\\web scraping\\output files\\TopicStats\\" + cleanFileName + ".csv", true);
+		String cleanFileName = fileName.replaceAll("[\\/\\+.^:,']",""); //remove some special characters to create the file names
+		//FileWriter mFileWriter = new FileWriter("M:\\masters\\semester 4\\web scraping\\output files\\TopicStats1\\" + cleanFileName + ".csv", true);
+		FileWriter mFileWriter = new FileWriter("/home/mosman/ThesisProject/ProjectData/TopicStats/2015_2014/" + cleanFileName + ".csv", true);
 		CSVWriter  writer = new CSVWriter(mFileWriter, ',');
 
 		//CSVWriter writer = new CSVWriter(new FileWriter("M:\\masters\\semester 4\\web scraping\\output files\\PoliticianToParties.csv"), ',');
@@ -18,9 +19,9 @@ public class StatisticsScrapping {
 		String name = nameArray[1]+ " "+ nameArray[0];
 		String partyName = x[1];
 		String[] entries = new String[3];
-		entries[0] = name;
-		entries[1] = partyName;
-		entries[2] = subjectDate;
+		entries[0] = name.replaceAll("[\\/\\+.^:,']","");
+		entries[1] = partyName.replaceAll("[\\/\\+.^:,']","");
+		entries[2] = subjectDate.replaceAll("[\\/\\+.^:,']","");
 		writer.writeNext(entries);
 	 
 		writer.close();
@@ -58,7 +59,7 @@ public class StatisticsScrapping {
 		      Elements debatesYearLinks = debatesYear.getElement(0).findEach("<a");
 		      //this is where the loop would start id="loopA" - in a later stage
 		      System.out.println("there are "+debatesYearLinks.size()+" years worth of debates in those links");
-		      String year1516href = debatesYear.getElement(0).findEach("<a").getElement(0).getAt("href");
+		      String year1516href = debatesYearLinks.getElement(1).getAt("href"); //from 0 to 9 for the 10 years
 		      System.out.println("the href of year 2015-2016 is " + year1516href);
 		      
 		      userAgent.visit(year1516href);
@@ -67,9 +68,10 @@ public class StatisticsScrapping {
 		      so we can get each MP that is inside each letter in a third loop id ="loopC"*/
 		      //start of id="loopB"
 		     
-		      for(int k = 0; k < mpsList.size(); k++){  //size 24 for each alphabet
+		      //for(int k = 12; k < mpsList.size(); k++){  //size 24 for each alphabet
+		      for(int k = 0; k < 12; k++){
 		      Elements mpNameList = mpsList.getElement(k).findEach("<a");
-		      Thread.sleep(5000);
+		      Thread.sleep(2000);
 		      //start of id="loopC"
 		      System.out.println(mpNameList.size());
 		      for(int i= 0; i < mpNameList.size(); i++){
@@ -105,15 +107,15 @@ public class StatisticsScrapping {
 		     for(int j =0; j <mpSubjectsList.size(); j++ ){
 		     String mpSubjectSpokenDate =  mpSubjectSpokenDateList.getElement(j).getText().trim();
 		     String mpSubjectText = mpSubjectsList.getElement(j).getText();
-		     System.out.println(mpSubjectText);
+		     System.out.println("mpSubjectText= " + mpSubjectText);
 		     System.out.println(mpSubjectSpokenDate);
 		     csvWriter(polParty, mpSubjectText, mpSubjectSpokenDate);
-		     Thread.sleep(5000);
+		     Thread.sleep(2000);
 		     }
 		     		     
 		     
 		     //end loopD
-		     Thread.sleep(5000);
+		     //Thread.sleep(5000);
 		      }//end of id="loopC"
 		     //break;
 		      }//end of id="loopB"
